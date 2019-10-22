@@ -1,11 +1,8 @@
-calculate_sbd_smeb<-function(file_name, sheet_name){
-  
-  #read in one month of data
-  data <- read_excel(file_name,sheet=sheet_name)
+calculate_sbd_smeb<-function(data){
   
   #group at the subdistrict level and take the median, removing NAs
   median_by_sbd <- data %>%
-    group_by(region, q_gov, q_district, q_sbd) %>%
+    group_by(Month, region, q_gov, q_district, q_sbd) %>%
     summarize(q_bread_price_per_8pieces = median(as.numeric(q_bread_price_per_8pieces), na.rm = TRUE),
               q_bulgur_price_per_kilo=median(as.numeric(q_bulgur_price_per_kilo), na.rm=TRUE),
               q_chicken_price_per_kilo=median(as.numeric(q_chicken_price_per_kilo), na.rm=TRUE),
