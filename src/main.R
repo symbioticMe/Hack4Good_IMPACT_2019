@@ -1,35 +1,35 @@
-library(readxl)
+#library(readxl)
 library("magrittr")
 library("plyr")
 library(tidyverse)
-library(openxlsx)
+#library(openxlsx)
 
-#function to be used to change date format later
-substrRight <- function(x, n){
-  substr(x, nchar(x)-n+1, nchar(x))
-}
+# Section One - Create SMEB data frames at sbd and town level ------------------------------------------------------------
 
-# Section One - Combine Data ------------------------------------------------------------
+setwd("C:/Users/Andrei/OneDrive/ETH Zurich/IMPACT Initiatives")
 
-setwd("C:/Users/Andrei/OneDrive/ETH Zurich/IMPACT Initiatives/Official data")
+#read in csv with all data
+aggregated_data <- read.csv(file="aggregated_monthly_1.csv", header=TRUE, sep=",")
+
+#group prices at the sbd level (taking median) and calculate smeb
+SMEB_sbd_level <- calculate_sbd_smeb(aggregated_data)
+
+#group prices at the town level (taking median) and calculate smeb
+SMEB_town_level <- calculate_town_smeb(aggregated_data)
 
 
-#get tab name of each month of data
-tabs=getSheetNames("AK mod_MM_for_nov17_aug19.xlsx")
+# Section Two - Combine Two data frames -----------------------------------
+sbd_level_df <- data.frame(Month=SMEB_sbd_level$Month, 
+                           region=SMEB_sbd_level$region, 
+                           q_gov=SMEB_sbd_level$q_gov, 
+                           q_district=SMEB_sbd_level$q_district, 
+                           q_sbd=SMEB_sbd_level$q_sbd,
+                           sbd_smeb_complete=SMEB_sbd_level$smeb_complete,
+                           sbd_smeb_only_missing_water=SMEB_sbd_level$smeb_only_missing_water,
+                           sbd_smeb_total_float=SMEB_sbd_level$smeb_total_float,
+                           sbd_smeb_sanswater_float=SMEB_sbd_level$smeb_sanswater_float,
+                           sbd_smeb_incomplete=SMEB_sbd_level$smeb_incomplete,
+                           sbd_smeb_usd=SMEB_sbd_level$smeb_usd)
 
-#combine all data into one matrix
-for (tab in tabs){
-  
-  #call custom function for grouping data at the subdistrict level and 
-  #calculating SMEBs (where the SMEB calculation is done using IMPACT's function)
-  data_wsmeb<-calculate_sbd_smeb("AK mod_MM_for_nov17_aug19.xlsx",tab)
-  
-  #add row to matrix
-  if (which(tabs==tab)==1){
-    combined_data <- cbind(month=rep(tab,nrow(data_wsmeb)), data_wsmeb)
-  } else{
-    combined_data <- rbind(combined_data, cbind(month=rep(tab,nrow(data_wsmeb)), data_wsmeb))
-  }
-}
-#change dates to be in YYYY-MM format
-combined_data$month<-paste("20",substrRight(combined_data$month,2),"-",sprintf("%02d", match(substr(combined_data$month, 1, 3),month.abb)), sep="")
+combined_town_sbd<-merge(SMEB_town_level, sbd_level_df, 
+                         by = c("Month","region","q_gov","q_district","q_sbd"))
