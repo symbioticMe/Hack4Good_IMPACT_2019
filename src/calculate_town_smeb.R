@@ -1,6 +1,6 @@
 calculate_town_smeb<-function(aggregated_data){
   
-  #group at the subdistrict level and take the median, removing NAs
+  #group at the town level and take the median, removing NAs
   median_by_town <- aggregated_data %>%
     group_by(Month, region, q_gov, q_district, q_sbd, q_town) %>%
     summarize(q_bread_price_per_8pieces = median(as.numeric(q_bread_price_per_8pieces), na.rm = TRUE),
