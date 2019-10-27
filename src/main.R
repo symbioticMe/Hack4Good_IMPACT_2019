@@ -1,8 +1,6 @@
-#library(readxl)
 library("magrittr")
 library("plyr")
 library(tidyverse)
-#library(openxlsx)
 
 # Section One - Create SMEB data frames at sbd and town level ------------------------------------------------------------
 
@@ -19,6 +17,8 @@ SMEB_town_level <- calculate_town_smeb(aggregated_data)
 
 
 # Section Two - Combine Two data frames -----------------------------------
+
+#select columns from the sbd dataset to merge
 sbd_level_df <- data.frame(Month=SMEB_sbd_level$Month, 
                            region=SMEB_sbd_level$region, 
                            q_gov=SMEB_sbd_level$q_gov, 
@@ -31,5 +31,13 @@ sbd_level_df <- data.frame(Month=SMEB_sbd_level$Month,
                            sbd_smeb_incomplete=SMEB_sbd_level$smeb_incomplete,
                            sbd_smeb_usd=SMEB_sbd_level$smeb_usd)
 
+#merge
 combined_town_sbd<-merge(SMEB_town_level, sbd_level_df, 
                          by = c("Month","region","q_gov","q_district","q_sbd"))
+
+
+# Section Three - Output to CSV -------------------------------------------
+setwd("C:/Users/Andrei/OneDrive/ETH Zurich/IMPACT Initiatives/csv output")
+write.csv(SMEB_sbd_level, paste("SMEB_sbd_level",Sys.Date(),".csv"))
+write.csv(SMEB_town_level, paste("SMEB_town_level",Sys.Date(),".csv"))
+write.csv(combined_town_sbd, paste("Town_level_w_sbd_SMEB",Sys.Date(),".csv"))
