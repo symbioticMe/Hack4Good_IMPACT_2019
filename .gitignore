@@ -9,3 +9,4 @@
 
 # Ignore all files in the data folder. 
 data/*
+.Rproj.user
