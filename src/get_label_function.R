@@ -3,7 +3,7 @@
 #' 
 #' @return a label which classifies the price of a commoditiy as stable, trend, volatile or volatile trend
 #' @inheritParams indicators
-get_label<- function(df, time_window=6, final_month, frac_missing=0.2, 
+get_label<- function(df, final_month, time_window=6, frac_missing=0.2, 
                      geo_level = 'q_district', commodity_type = 'smeb_total_float'){
   # Step 0
   source("src/aggregate_price_geogr.R")
