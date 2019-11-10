@@ -6,20 +6,6 @@
 
 library(tidyverse)
 
-get_aggregated_table <- function(){
-  source("src/aggregate_price_geogr.R")
-  df <- aggregate_price_geogr(df, geo_level, commodity_type)
-  
-  # take df and output df_aggr and complete it
-  source('src/complete_data.R')
-  df <- complete_data(df)
-  
-  #filter on time window
-  source('src/filter_on_time_window.R')
-  df <- filter_on_time_window(data = df, time_window = time_window, final_month = final_month)
-  return(df)
-}
-
 get_label<- function(df, final_month, time_window=6, frac_missing=0.2, 
                      geo_level = 'q_district', commodity_type = 'smeb_total_float'){
   # Step 0
