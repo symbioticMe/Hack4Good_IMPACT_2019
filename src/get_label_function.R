@@ -4,44 +4,56 @@
 #' @return a label which classifies the price of a commoditiy as stable, trend, volatile or volatile trend
 #' @inheritParams indicators
 get_label<- function(df, time_window=6, final_month, frac_missing=0.2, 
-                     geo_level, commodity_type){
-  
+                     geo_level = 'q_district', commodity_type = 'smeb_total_float'){
   # Step 0
-  source("aggregate_price_geogr.R")
-  price_vector <- aggregate_price_geogr(df,geo_level, commodity_type)
-    df= median(df) # groupby geo_level and take median over prices
-    if(commoditiy_type=='SMEB') {
-      df=calc_SMEB_geogr(geogr,df)
-    }
+  source("src/aggregate_price_geogr.R")
+  df <- aggregate_price_geogr(df, geo_level, commodity_type)
     
   # take df and output df_aggr and complete it
+  source('src/complete_data.R')
+  df <- complete_data(df)
+  
+  #filter on time window
+  source('src/filter_on_time_window.R')
+  df <- filter_on_time_window(data = df, time_window = time_window, final_month = final_month)
+  
   # return a price vector
   
-  # Step 1
-  source("get_derivative.R")
-  derivative_vector <- get_derivative(price_vector)
-  # return a derivatie vector
   
-  # Step 2
-  source("aggregate_quantity.R")
-  c(SD,mean,numb_missing_prices) <- aggregate_quantity(price_vector, derivative_vector)
-  # return a vector with the standard deviation, the mean and the number of missing price points
   
-  # Step 3
-  source("assign_label")
-  label <- assign_label(SD,mean,thres=NULL){
-    if(thres==NULL){
-      if(thres<1 & thres>0){
-        thres=mean*thres
-      }
-      if(SD< thres){
-        label<-"volatile"
-      }
-    }
+  source("src/get_derivative.R")
+  geogr_units = unique(df[[geo_level]])
+  
+  label_df_list = list()
+  for (location in geogr_units){
+    
+    # Step 1
+    derivative_vector <- get_derivative(price_vector)
+    # Step 2
+    source("src/aggregate_quantity.R")
+    aggr_stats <- aggregate_quantity(price_vector, derivative_vector)
+    sd_der = aggr_stats$sd
+    mean_der = aggr_stats$mean
+    n_missing_der = aggr_stats$n_missing
+    frac_missing_der = aggr_statsfrac_missing
+    n_der = aggr_stats$n
+    
+    new_df = data.frame(location = location, sd_der = sd_der, mean_der = mean_der, 
+                        n_missing_der = n_missing_der, frac_missing_der = frac_missing_der,
+                        n_der = n_der)
+    names(new_df)[1] = geo_level
+    # return a vector with the standard deviation, the mean and the number of missing price points
+    
+    # Step 3
+    # source("src/assign_label.R")
+    # new_df$label <- assign_label(new_df, thres=NULL)
+    # return label
+    label_df_list[[location]] = new_df
   }
-  # return label
+  label_df = do.call(rbind, label_df_list)
   
-  return(label)
+  # return a data frame with labels or trend characteristics
+  return(label_df)
 }
   
   

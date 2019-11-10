@@ -1,12 +1,11 @@
 # Default .gitignore
 # Ignore all dotfiles.
 .*
-
 # Explicitly include .gitignore.
 !/.gitignore
 # Explicitly include all gitkeep files.
 !*.gitkeep
-
-# Ignore all files in the data folder. 
+# Ignore all files in the data folder.
 data/*
 .Rproj.user
+wonderwoman.Rproj
