@@ -14,8 +14,6 @@ library("DescTools")
 library(tidyverse)
 
 aggregate_price_geogr<-function(data, geo_level, commodity_type){
-  
-  #geo_level_possibilities <- c("region", "gov", "district", "sbd", "town")
   col_name_in_data <- c("region", "q_gov", "q_district", "q_sbd", "q_town")
   level<-grep(geo_level, col_name_in_data)
   
@@ -58,7 +56,7 @@ aggregate_price_geogr<-function(data, geo_level, commodity_type){
     filter(!is.na(col_name_in_data[level]))
   
   if (commodity_type %like% "%smeb%"){
-    source("src/syrmm_smeb_old.R")
+    source('src/syrmm_smeb_old.R')
     #pass in each row into IMPACT's function for calculating SMEB
     for (i in 1:nrow(agg_by_geo_level)){
       if (i==1){
