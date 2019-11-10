@@ -6,18 +6,30 @@
 
 library(tidyverse)
 
-get_label<- function(df, final_month, time_window=6, frac_missing=0.2, 
-                     geo_level = 'q_district', commodity_type = 'smeb_total_float'){
-  # Step 0
-  df = get_aggregated_table(df)
+get_label_from_raw_table <- function(df, final_month,  time_window=6, frac_missing=0.2, 
+                                     geo_level = 'q_district', commodity_type = 'smeb_total_float'){
+  source('src/get_aggregated_table.R')
+  df = get_aggregated_table(df, geo_level = geo_level, commodity_type = commodity_type,
+                            final_month = final_month, time_window = time_window)
   
+  label_df = get_label(df, frac_missing = frac_missing, 
+                       geo_level = geo_level, commodity_type = commodity_type)
+  
+  return(label_df)
+}
+
+geo_level = 'q_district'
+
+
+get_label<- function(df, frac_missing=0.2, 
+                     geo_level = 'q_district', commodity_type = 'smeb_total_float'){
   
   source("src/get_derivative.R")
   geogr_units = unique(df[[geo_level]])
   
   label_df_list = list()
   for (location in geogr_units){
-    new_df = get_label_per_location()
+    new_df = get_label_per_location(df, geo_level, location, commodity_type)
     label_df_list[[location]] = new_df
   }
   label_df = do.call(rbind, label_df_list)
