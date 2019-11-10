@@ -14,6 +14,7 @@ library("DescTools")
 library(tidyverse)
 
 aggregate_price_geogr<-function(data, geo_level, commodity_type){
+  #Options for 'geo_level' that the user can enter
   col_name_in_data <- c("region", "q_gov", "q_district", "q_sbd", "q_town")
   level<-grep(geo_level, col_name_in_data)
   

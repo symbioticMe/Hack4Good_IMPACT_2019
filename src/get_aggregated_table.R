@@ -1,4 +1,4 @@
-#INPUT: data frame which is the reading in
+#INPUTS:
 #1) aggregated_data.csv
 #2) geographical level for prices to be aggregated at 
 # (options are 'region', 'gov' 'distict', 'sbd', 'town')
@@ -7,6 +7,10 @@
 # 4) time_window - integer for the number of months to be analyzed
 # 5) final_month - the last month for the analysis (i.e., the analysis will be
 # done on the 'time_window' months up to the 'final_month')
+
+#OUTPUT:
+#1) A table with data only for the months of the time window to be analyzed, with
+#data grouped at the geographical level specified by the user (taking median of prices)
 
 get_aggregated_table <- function(df, geo_level = 'q_district', commodity_type = 'smeb_total_float', time_window = 6, final_month){
   source("src/aggregate_price_geogr.R")

@@ -9,6 +9,8 @@ get_derivative<-function(price_vector){
   
   derivative_vector <- matrix(NA, nrow=length(price_vector), ncol=1)
   
+  #remove NAs -> we take the derivative of two values even 
+  #if they are not in subsequent months
   price_vector_mod <- price_vector[!is.na(price_vector)]
   
   for (i in 1:length(price_vector_mod)){
