@@ -8,8 +8,11 @@
 get_derivative<-function(price_vector){
   
   derivative_vector <- matrix(NA, nrow=length(price_vector), ncol=1)
-  for (i in 2:length(derivative_vector)){
-    derivative_vector[i]=price_vector[i]-price_vector[i-1]
+  
+  price_vector_mod <- price_vector[!is.na(price_vector)]
+  
+  for (i in 1:length(price_vector_mod)){
+    derivative_vector[i]=price_vector[i+1]-price_vector[i]
   }
   
   return(derivative_vector)
