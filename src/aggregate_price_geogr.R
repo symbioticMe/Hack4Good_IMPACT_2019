@@ -6,7 +6,7 @@
 # (can't do this) if geo_level="region" though
 
 # OUTPUT:
-# data with prices grouped plus SMEB for each row 
+# data with prices grouped (plus SMEB if specified) for each row 
 # (i.e. each month for each geo_level label)
 
 #Need the following libraries:

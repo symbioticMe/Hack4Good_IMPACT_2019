@@ -18,8 +18,6 @@ get_label_from_raw_table <- function(df, final_month,  time_window=6, frac_missi
   return(label_df)
 }
 
-geo_level = 'q_district'
-
 
 get_label<- function(df, frac_missing=0.2, 
                      geo_level = 'q_district', commodity_type = 'smeb_total_float'){
