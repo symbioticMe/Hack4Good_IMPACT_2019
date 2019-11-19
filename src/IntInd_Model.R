@@ -40,11 +40,19 @@ label_df = get_label(df, frac_missing = frac_missing,
                      geo_level = geo_level, commodity_type = commodity_type)
 
 
+# Plotting ----------------------------------------------------------------
 library(ggpubr)
+
+#Plot the time series for each instance of the geographical level being analyzed
+#i.e., for each subdistrict
 source("src/plotting_functions/plot_trends.R")
 gg_trend = plot_trend(df, geo_level = geo_level, commodity_type = commodity_type)
+
+#Plot the chart with all data points
 source("src/plotting_functions/plot_derivative_characteristics.R")
 gg_der = plot_fluctuation_characteristics(label_df, geo_level = geo_level)
+
+#if there is too many data points to plot the two charts together, then we plot separately
 if (length(unique(df[[geo_level]])) > 49){
   plot(gg_trend)
   plot(gg_der)
