@@ -8,7 +8,7 @@ library(tidyverse)
 
 get_label_from_raw_table <- function(df, final_month,  time_window=6, frac_missing=0.2, 
                                      geo_level = 'q_district', commodity_type = 'smeb_total_float'){
-  source('src/main_workflow_price_dynamics/get_aggregated_table.R')
+  source('src/interpretable_indicators_price_dynamics/get_aggregated_table.R')
   df = get_aggregated_table(df, geo_level = geo_level, commodity_type = commodity_type,
                             final_month = final_month, time_window = time_window)
   
@@ -22,7 +22,7 @@ get_label_from_raw_table <- function(df, final_month,  time_window=6, frac_missi
 get_label<- function(df, frac_missing=0.2, 
                      geo_level = 'q_district', commodity_type = 'smeb_total_float'){
   
-  source("src/main_workflow_price_dynamics/get_derivative.R")
+  source("src/interpretable_indicators_price_dynamics/get_derivative.R")
   geogr_units = unique(df[[geo_level]])
   
   label_df_list = list()
@@ -46,7 +46,7 @@ get_label_per_location <- function(df, geo_level, location, commodity_type) {
   
   derivative_vector <- get_derivative(price_vector)
   # Step 2
-  source("src/main_workflow_price_dynamics/aggregate_quantity.R")
+  source("src/interpretable_indicators_price_dynamics/aggregate_quantity.R")
   aggr_stats <- aggregate_quantity(derivative_vector)
   sd_der = aggr_stats$sd
   mean_der = aggr_stats$mean
@@ -58,9 +58,16 @@ get_label_per_location <- function(df, geo_level, location, commodity_type) {
   # return a vector with the standard deviation, the mean and the number of missing price points
   
   # Step 3
-  # source("src/main_workflow_price_dynamics/extra_functions/assign_label.R")
+  # source("src/interpretable_indicators_price_dynamics/extra_functions/assign_label.R")
   # new_df$label <- assign_label(new_df, thres=NULL, frac_missing = frac_missing)
   # return new_df with the label ("volatile/trend/stable")
+  
+  # Step 4
+  # source("src/interpretable_indicators_price_dynamics/extra_functions/confidence_interval.R")
+  # conf_interval <- confidence_interval(new_df)
+  # new_df$min_price = conf_interval$min_price
+  # new_df$max_price = conf_interval$max_price
+  
   
   #assemble it all into the dataframe
   new_df = data.frame(location = location, sd_der = sd_der, mean_der = mean_der, 

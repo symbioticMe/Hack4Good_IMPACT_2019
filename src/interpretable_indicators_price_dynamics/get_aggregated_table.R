@@ -13,15 +13,16 @@
 #data grouped at the geographical level specified by the user (taking median of prices)
 
 get_aggregated_table <- function(df, geo_level = 'q_district', commodity_type = 'smeb_total_float', time_window = 6, final_month){
-  source("src/main_workflow_price_dynamics/interim_functions/aggregate_price_geogr.R")
+  source("src/aggregate_price_geogr.R")
   df <- aggregate_price_geogr(df, geo_level, commodity_type)
   
   # take df and output df_aggr and complete it
-  source('src/main_workflow_price_dynamics/interim_functions/complete_data.R')
+  source('src/interpretable_indicators_price_dynamics/complete_data.R')
   df <- complete_data(df)
   
   #filter on time window
-  source('src/main_workflow_price_dynamics/interim_functions/filter_on_time_window.R')
+  source('src/interpretable_indicators_price_dynamics/filter_on_time_window.R')
   df <- filter_on_time_window(data = df, time_window = time_window, final_month = final_month)
+  write.csv(df, "data/processed/SMEB_sbd_level.csv")
   return(df)
 }
