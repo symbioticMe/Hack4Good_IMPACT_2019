@@ -23,6 +23,5 @@ get_aggregated_table <- function(df, geo_level = 'q_district', commodity_type = 
   #filter on time window
   source('src/interpretable_indicators_price_dynamics/filter_on_time_window.R')
   df <- filter_on_time_window(data = df, time_window = time_window, final_month = final_month)
-  write.csv(df, "data/processed/SMEB_sbd_level.csv")
   return(df)
 }
