@@ -7,5 +7,6 @@
 !*.gitkeep
 # Ignore all files in the data folder.
 data/*
+plots/*
 .Rproj.user
 wonderwoman.Rproj
