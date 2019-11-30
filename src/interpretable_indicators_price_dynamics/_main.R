@@ -25,17 +25,19 @@ time_window=6
 
 # Model -------------------------------------------------------------------
 
+#set working directory to the repository of "Interpretable Indicators" (team "wonderwoman")
 setwd("C:/Users/Andrei/OneDrive/ETH Zurich/IMPACT Initiatives/code/wonderwoman")
+#this is the main data file, created in 
 read_in_df <- read.csv(file="data/aggregated_monthly_1.csv", header=TRUE, sep=",")
 
 #Data aggregated at the specified geographical level (with prices grouped by median)
 #contains smeb columns if input 'commodity_type' is a smeb value
-source('src/get_aggregated_table.R')
+source('src/main_workflow_price_dynamics/get_aggregated_table.R')
 df = get_aggregated_table(read_in_df, geo_level = geo_level, commodity_type = commodity_type,
                           final_month = final_month, time_window = time_window)
 
 #Table of summary statistics
-source('src/get_label_function.R')
+source('src/main_workflow_price_dynamics/get_label_function.R')
 label_df = get_label(df, frac_missing = frac_missing, 
                      geo_level = geo_level, commodity_type = commodity_type)
 
