@@ -16,3 +16,14 @@ plot_trend <- function(df, geo_level='q_district',
   
   return(gg_trend)
 }
+
+plot_estimate_CI <- function(df, 
+                          final_month, 
+                          time_window = 6,
+                          conf_interval = .95,
+                          price_col = 'SMEB', 
+                          geogr_level = 'q_district',
+                          geogr_columns = c('region','q_distr','q_sbd')){
+  
+  
+}
